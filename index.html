@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figma → After Effects — перенос слоёв с перспективой</title>
+<meta name="description" content="Бесплатный плагин Figma: перспектива и скос, warp-сетка 3×3 и экспорт слоёв в After Effects — каждый фрейм становится готовой композицией. Работает локально.">
+<meta property="og:title" content="Figma → After Effects — без переноса вручную">
+<meta property="og:description" content="Перспектива, warp и экспорт слоёв Figma в композиции After Effects. Бесплатный плагин + скрипт.">
+<style>
+  :root { --bg:#fff; --bg2:#f5f5f7; --card:#fff; --ink:#1d1d1f; --ink2:#6e6e73; --line:#d2d2d7;
+    --accent:#0071e3; --accent-ink:#fff; --shadow:0 20px 60px rgba(0,0,0,.08);
+    --brand1:#8a5bff; --brand2:#4318d6; }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--bg2:#101012;--card:#1c1c1e;--ink:#f5f5f7;--ink2:#a1a1a6;--line:#38383a;--accent:#2997ff;--shadow:0 20px 60px rgba(0,0,0,.5);}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:17px;line-height:1.47;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  section[id],header[id]{scroll-margin-top:60px}
+  nav{position:sticky;top:0;z-index:10;backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+  nav .wrap{display:flex;align-items:center;gap:10px;height:52px}
+  nav .brand{display:flex;align-items:center;gap:9px;font-weight:600;color:var(--ink)}
+  .tile{border-radius:7px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--brand1),var(--brand2))}
+  nav .brand .tile{width:24px;height:24px}nav .brand .tile svg{width:15px;height:15px}
+  nav .links{margin-left:auto;display:flex;gap:22px;font-size:13px;align-items:center}
+  nav .links a{color:var(--ink2)}
+  @media (max-width:640px){nav .links a:not(.cta){display:none}}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:980px;padding:12px 22px;font-size:17px;font-weight:500;background:var(--accent);color:var(--accent-ink)}
+  .btn:hover{text-decoration:none;filter:brightness(1.08)}
+  .btn.ghost{background:transparent;color:var(--accent);padding-left:6px;padding-right:6px}
+  .btn.small{padding:6px 14px;font-size:13px}
+  .hero{text-align:center;padding:72px 0 36px}
+  .appico{width:96px;height:96px;border-radius:22px;box-shadow:var(--shadow);display:inline-flex;align-items:center;justify-content:center}
+  .appico svg{width:50px;height:50px}
+  .eyebrow{color:var(--ink2);font-size:19px;font-weight:600;margin-top:22px}
+  h1{font-size:clamp(38px,6.6vw,74px);line-height:1.05;letter-spacing:-.035em;font-weight:700;margin-top:8px}
+  .lead{font-size:clamp(19px,2.4vw,24px);color:var(--ink2);max-width:740px;margin:18px auto 0;line-height:1.35}
+  .ctas{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:28px;flex-wrap:wrap}
+  .note{color:var(--ink2);font-size:13px;margin-top:12px}
+  .panel{margin:44px auto 0;max-width:1000px;border-radius:28px;overflow:hidden;box-shadow:var(--shadow);background:#eceef2;padding:36px 20px}
+  .panel svg{display:block;width:100%;height:auto}
+  .caption{text-align:center;color:var(--ink2);font-size:14px;margin-top:14px}
+  section{padding:88px 0}section.alt{background:var(--bg2)}
+  h2{font-size:clamp(32px,4.6vw,52px);line-height:1.08;letter-spacing:-.03em;font-weight:700;text-align:center}
+  .sub{text-align:center;color:var(--ink2);font-size:21px;max-width:700px;margin:14px auto 0;line-height:1.38}
+  .grid{display:grid;gap:18px;margin-top:48px}.g3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:900px){.g3{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:22px;padding:28px}
+  section:not(.alt) .card{background:var(--bg2)}
+  .card h3{font-size:21px;letter-spacing:-.02em;line-height:1.2}
+  .card p{color:var(--ink2);margin-top:8px;font-size:16px}
+  .card .num{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:10px}
+  .card .ico{width:36px;height:36px;color:var(--accent);margin-bottom:14px}
+  .final{text-align:center}
+  footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--ink2);font-size:12px}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#">
+      <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l16-2.5v13L4 20z"/><path d="M4 11l16-1.6M12 5.4v13" opacity=".55"/></svg></span>
+      Figma → After&nbsp;Effects
+    </a>
+    <div class="links">
+      <a href="#how">Как работает</a>
+      <a href="https://dany-tut.github.io/erasely/" target="_blank" rel="noopener">Другие плагины</a>
+      <a class="btn small cta" href="#get">Скачать</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="appico" style="background:linear-gradient(135deg,var(--brand1),var(--brand2))">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l16-2.5v13L4 20z"/><path d="M4 11l16-1.6M12 5.4v13" opacity=".55"/></svg>
+    </span>
+    <div class="eyebrow">Плагин для Figma + скрипт для After Effects</div>
+    <h1>Figma → After Effects.<br>Без переноса вручную.</h1>
+    <p class="lead">Перспектива и скос, warp-сетка, экспорт слоёв в After Effects: каждый фрейм становится
+      готовой композицией — нативные слои и растровые эффекты один в один.</p>
+    <div class="ctas">
+      <a class="btn" href="#get">Скачать бесплатно</a>
+      <a class="btn ghost" href="#how">Как это работает ›</a>
+    </div>
+    <div class="panel">
+      <svg viewBox="0 0 940 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Arial,sans-serif">
+        <!-- Figma frame со скосом/перспективой -->
+        <text x="150" y="40" fill="#5b616b" font-size="15" font-weight="600" text-anchor="middle">Figma — скос и warp</text>
+        <polygon points="70,80 250,62 240,210 80,228" fill="#fff" stroke="#d7dbe2" stroke-width="2"/>
+        <g stroke="#c9ccd4" stroke-width="1.5" opacity=".8">
+          <line x1="130" y1="74" x2="137" y2="222"/><line x1="190" y1="68" x2="193" y2="216"/>
+          <line x1="76" y1="129" x2="246" y2="112"/><line x1="78" y1="179" x2="244" y2="162"/>
+        </g>
+        <circle cx="105" cy="108" r="14" fill="#8a5bff"/>
+        <rect x="150" y="150" width="60" height="34" rx="6" fill="#35cfa8"/>
+        <!-- стрелка -->
+        <g stroke="#8a5bff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="330" y1="150" x2="470" y2="150"/><path d="M452 136 L472 150 L452 164"/>
+        </g>
+        <text x="400" y="132" fill="#8a5bff" font-size="14" font-weight="600" text-anchor="middle">экспорт</text>
+        <!-- After Effects comp -->
+        <text x="730" y="40" fill="#5b616b" font-size="15" font-weight="600" text-anchor="middle">After Effects — композиция</text>
+        <rect x="540" y="62" width="360" height="176" rx="10" fill="#1f2230"/>
+        <rect x="540" y="62" width="360" height="30" rx="10" fill="#2a2e40"/>
+        <rect x="540" y="82" width="360" height="10" fill="#2a2e40"/>
+        <circle cx="558" cy="77" r="5" fill="#8a5bff"/>
+        <text x="576" y="82" fill="#cfd3e0" font-size="13">Frame 1 — comp</text>
+        <g>
+          <rect x="556" y="106" width="150" height="16" rx="4" fill="#3a3f55"/><rect x="712" y="106" width="172" height="16" rx="4" fill="#8a5bff" opacity=".85"/>
+          <rect x="556" y="130" width="110" height="16" rx="4" fill="#3a3f55"/><rect x="672" y="130" width="150" height="16" rx="4" fill="#35cfa8" opacity=".85"/>
+          <rect x="556" y="154" width="180" height="16" rx="4" fill="#3a3f55"/><rect x="742" y="154" width="120" height="16" rx="4" fill="#5b8cff" opacity=".85"/>
+          <rect x="556" y="178" width="90" height="16" rx="4" fill="#3a3f55"/><rect x="652" y="178" width="140" height="16" rx="4" fill="#ff8a5b" opacity=".85"/>
+          <rect x="556" y="202" width="140" height="16" rx="4" fill="#3a3f55"/><rect x="702" y="202" width="100" height="16" rx="4" fill="#c06bff" opacity=".85"/>
+        </g>
+      </svg>
+    </div>
+    <p class="caption">Слои и трансформации из Figma приезжают в After Effects отдельными слоями на таймлайне.</p>
+  </div>
+</header>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Три инструмента в одном.</h2>
+    <p class="sub">Перспектива, warp и мост в After Effects — всё в одной панели плагина.</p>
+    <div class="grid g3">
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 7l16-2v13L4 19z"/></svg>
+        <h3>Perspective</h3><p>Скос — слой остаётся векторным. Corner pin по 4 углам — для настоящей перспективы (на выходе картинка).</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M10 4v16M14 4v16M4 10h16M4 14h16" opacity=".6"/></svg>
+        <h3>Warp 3×3</h3><p>Сетка-деформация: тяните узлы, изгибайте картинку или текст-как-изображение.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h8l6 6v8H5z"/><path d="M13 5v6h6"/></svg>
+        <h3>Экспорт в AE</h3><p>Выделите фреймы → JSON. Скрипт в After Effects собирает из каждого фрейма отдельную композицию.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16" opacity=".6"/></svg>
+        <h3>Нативные слои</h3><p>Прямоугольники, эллипсы, вектора, текст (шрифт, трекинг, выравнивание), прозрачность, режимы наложения, поворот.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M4 16l5-4 7 5"/></svg>
+        <h3>Растр для сложного</h3><p>Градиенты, картинки, тени, маски, скос/перспектива — приходят PNG один в один, как в Figma.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
+        <h3>Локально и бесплатно</h3><p>Всё считается на вашем компьютере. Без подписок, лимитов и регистрации.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Три шага.</h2>
+    <p class="sub">Из Figma в After Effects — без ручного пересобирания слоёв.</p>
+    <div class="grid g3">
+      <div class="card"><div class="num">1</div><h3>Экспорт из Figma</h3><p>Выделите фреймы, при желании примените Perspective или Warp, нажмите «Экспорт в JSON».</p></div>
+      <div class="card"><div class="num">2</div><h3>Импорт в After Effects</h3><p>Положите скрипт <code>FigmaToAE.jsx</code> в ScriptUI Panels, откройте через Window и выберите JSON.</p></div>
+      <div class="card"><div class="num">3</div><h3>Готовые композиции</h3><p>На каждый фрейм — своя композиция: слои, текст и трансформации уже на таймлайне. Анимируйте.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="get" class="alt final">
+  <div class="wrap">
+    <span class="appico" style="background:linear-gradient(135deg,var(--brand1),var(--brand2));width:80px;height:80px;border-radius:18px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:42px;height:42px"><path d="M4 7l16-2.5v13L4 20z"/><path d="M4 11l16-1.6M12 5.4v13" opacity=".55"/></svg>
+    </span>
+    <h2 style="margin-top:18px">Перенесите свой макет.</h2>
+    <p class="sub">В архиве — плагин для Figma и скрипт для After Effects. Плагин: распакуйте →
+      Figma → Plugins → Development → Import plugin from manifest → <code>figma-plugin/manifest.json</code>.
+      Скрипт: <code>ae-script/FigmaToAE.jsx</code> в папку Scripts/ScriptUI Panels.</p>
+    <div class="ctas"><a class="btn" href="FigmaToAE.zip" download>Скачать для Figma и AE</a></div>
+    <p class="note">Figma для компьютера + After Effects · ~23 КБ · Mac и Windows</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Figma → After Effects — бесплатный плагин для Figma.</span>
+    <span><a href="https://dany-tut.github.io/erasely/" target="_blank" rel="noopener">Другие плагины: Erasely и Curved shadow ›</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
