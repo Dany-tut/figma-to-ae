@@ -191,5 +191,107 @@
   </div>
 </footer>
 
+<script>
+/* RU/EN */
+(function () {
+  // RU/EN: language from ?lang=, then saved choice, then browser (ru/uk/be/kk → ru, else en).
+  var EN = {
+"Figma → After Effects — перенос слоёв с перспективой": "Figma → After Effects — move layers with perspective intact",
+"Бесплатный плагин Figma: перспектива и скос, warp-сетка 3×3 и экспорт слоёв в After Effects — каждый фрейм становится готовой композицией. Работает локально.": "A free Figma plugin: perspective and skew, a 3×3 warp grid, and layer export to After Effects — every frame becomes a ready-to-animate composition. Runs locally.",
+"Figma → After Effects — без переноса вручную": "Figma → After Effects — no more rebuilding by hand",
+"Перспектива, warp и экспорт слоёв Figma в композиции After Effects. Бесплатный плагин + скрипт.": "Perspective, warp, and Figma layers exported as After Effects compositions. A free plugin + script.",
+"Как работает": "How it works",
+"Другие плагины": "More plugins",
+"Скачать": "Download",
+"Плагин для Figma + скрипт для After Effects": "A Figma plugin + an After Effects script",
+"Без переноса вручную.": "No rebuilding by hand.",
+"Перспектива и скос, warp-сетка, экспорт слоёв в After Effects: каждый фрейм становится готовой композицией — нативные слои и растровые эффекты один в один.": "Perspective and skew, a warp grid, and layer export to After Effects: every frame lands as a ready composition — native layers, plus pixel-perfect raster for the effects.",
+"Скачать бесплатно": "Download for free",
+"Как это работает ›": "See how it works ›",
+"Figma — скос и warp": "Figma — skew and warp",
+"экспорт": "export",
+"After Effects — композиция": "After Effects — composition",
+"Слои и трансформации из Figma приезжают в After Effects отдельными слоями на таймлайне.": "Your Figma layers and transforms arrive in After Effects as separate layers on the timeline.",
+"Три инструмента в одном.": "Three tools in one.",
+"Перспектива, warp и мост в After Effects — всё в одной панели плагина.": "Perspective, warp, and a bridge to After Effects — all in one plugin panel.",
+"Скос — слой остаётся векторным. Corner pin по 4 углам — для настоящей перспективы (на выходе картинка).": "Skew keeps the layer vector. Four-corner pin gives you true perspective (the result is an image).",
+"Сетка-деформация: тяните узлы, изгибайте картинку или текст-как-изображение.": "A deformation grid: drag the handles to bend an image, or text rendered as an image.",
+"Экспорт в AE": "Export to AE",
+"Выделите фреймы → JSON. Скрипт в After Effects собирает из каждого фрейма отдельную композицию.": "Select frames → JSON. The After Effects script turns each frame into its own composition.",
+"Нативные слои": "Native layers",
+"Прямоугольники, эллипсы, вектора, текст (шрифт, трекинг, выравнивание), прозрачность, режимы наложения, поворот.": "Rectangles, ellipses, vectors, text (font, tracking, alignment), opacity, blend modes, rotation.",
+"Растр для сложного": "Raster for the tricky stuff",
+"Градиенты, картинки, тени, маски, скос/перспектива — приходят PNG один в один, как в Figma.": "Gradients, images, shadows, masks, skew and perspective come over as PNGs that match Figma exactly.",
+"Локально и бесплатно": "Local and free",
+"Всё считается на вашем компьютере. Без подписок, лимитов и регистрации.": "Everything runs on your computer. No subscriptions, no limits, no sign-up.",
+"Три шага.": "Three steps.",
+"Из Figma в After Effects — без ручного пересобирания слоёв.": "From Figma to After Effects without rebuilding layers by hand.",
+"Экспорт из Figma": "Export from Figma",
+"Выделите фреймы, при желании примените Perspective или Warp, нажмите «Экспорт в JSON».": "Select your frames, apply Perspective or Warp if you like, and export to JSON.",
+"Импорт в After Effects": "Import into After Effects",
+"Положите скрипт": "Drop the",
+"в ScriptUI Panels, откройте через Window и выберите JSON.": "script into ScriptUI Panels, open it from the Window menu, and pick the JSON.",
+"Готовые композиции": "Ready-made compositions",
+"На каждый фрейм — своя композиция: слои, текст и трансформации уже на таймлайне. Анимируйте.": "One composition per frame, with layers, text and transforms already on the timeline. Start animating.",
+"Перенесите свой макет.": "Bring your design over.",
+"В архиве — плагин для Figma и скрипт для After Effects. Плагин: распакуйте → Figma → Plugins → Development → Import plugin from manifest →": "The archive contains the Figma plugin and the After Effects script. Plugin: unzip → Figma → Plugins → Development → Import plugin from manifest →",
+". Скрипт:": ". Script: put",
+"в папку Scripts/ScriptUI Panels.": "into the Scripts/ScriptUI Panels folder.",
+"Скачать для Figma и AE": "Download for Figma and AE",
+"Figma для компьютера + After Effects · ~23 КБ · Mac и Windows": "Figma desktop app + After Effects · ~23 KB · Mac and Windows",
+"Figma → After Effects — бесплатный плагин для Figma.": "Figma → After Effects is a free Figma plugin.",
+"Другие плагины: Erasely и Curved shadow ›": "More plugins: Erasely and Curved shadow ›"
+};
+  var K = 'lang', CYR = /[А-Яа-яЁё]/, ATTRS = ['alt', 'aria-label', 'title', 'placeholder', 'content'];
+  function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
+  function save(l) { try { localStorage.setItem(K, l); } catch (e) {} }
+  function detect() {
+    try { var q = new URLSearchParams(location.search).get('lang'); if (q === 'en' || q === 'ru') { save(q); return q; } } catch (e) {}
+    try { var s = localStorage.getItem(K); if (s === 'en' || s === 'ru') return s; } catch (e) {}
+    var l = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    return /^(ru|uk|be|kk)\b/i.test(l) ? 'ru' : 'en';
+  }
+  var texts = [], attrs = [];
+  var w = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT, {
+    acceptNode: function (n) { var p = n.parentNode && n.parentNode.nodeName; return p === 'SCRIPT' || p === 'STYLE' ? 2 : 1; }
+  });
+  for (var n; (n = w.nextNode());) { var k = norm(n.nodeValue); if (k && EN.hasOwnProperty(k)) texts.push([n, n.nodeValue, k]); else if (CYR.test(k)) console.warn('i18n: no EN for', k); }
+  document.querySelectorAll('*').forEach(function (el) {
+    ATTRS.forEach(function (a) { var v = el.getAttribute(a); if (v && EN.hasOwnProperty(norm(v))) attrs.push([el, a, v, norm(v)]); });
+  });
+  var btn;
+  function apply(l) {
+    document.documentElement.lang = l;
+    texts.forEach(function (t) {
+      if (l === 'ru') { t[0].nodeValue = t[1]; return; }
+      var m = t[1].match(/^\s*/)[0], e = t[1].match(/\s*$/)[0];
+      t[0].nodeValue = m + EN[t[2]] + e;
+    });
+    attrs.forEach(function (a) { a[0].setAttribute(a[1], l === 'ru' ? a[2] : EN[a[3]]); });
+    if (btn) {
+      btn.children[0].className = l === 'ru' ? 'on' : '';
+      btn.children[1].className = l === 'en' ? 'on' : '';
+      btn.setAttribute('aria-label', l === 'ru' ? 'Switch to English' : 'Switch to Russian');
+    }
+    window.dispatchEvent(new Event('langchange'));
+    window.dispatchEvent(new Event('resize'));
+  }
+  var st = document.createElement('style');
+  st.textContent = '.lang-sw{font:inherit;font-size:12px;line-height:1;letter-spacing:.02em;background:none;border:1px solid color-mix(in srgb,currentColor 25%,transparent);' +
+    'border-radius:980px;padding:5px 9px;color:inherit;cursor:pointer;opacity:.75;display:inline-flex;gap:5px;align-items:center}' +
+    '.lang-sw:hover{opacity:1}.lang-sw span{opacity:.5}.lang-sw span.on{opacity:1;font-weight:600}';
+  document.head.appendChild(st);
+  var links = document.querySelector('nav .links');
+  if (links) {
+    btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'lang-sw';
+    btn.innerHTML = '<span>RU</span><span>EN</span>';
+    btn.onclick = function () { var l = document.documentElement.lang === 'ru' ? 'en' : 'ru'; save(l); apply(l); };
+    var cta = links.querySelector('.cta, .pill');
+    links.insertBefore(btn, cta || null);
+  }
+  apply(detect());
+})();
+</script>
 </body>
 </html>
